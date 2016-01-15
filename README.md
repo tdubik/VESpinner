@@ -1,8 +1,8 @@
 # VESpinner
 
-Spinner or ( as apple named it UIActivityIndicator) which you can modify to your needs.
+Spinner (or as apple named it UIActivityIndicator) which you can customize.
 
-### USage
+### Usage
 
     `CGFloat spinnerSize = 50.0;
 
@@ -19,3 +19,6 @@ Spinner or ( as apple named it UIActivityIndicator) which you can modify to your
     [_spinner setDotSize:9.0];
     //start animating
     [_spinner startAnimating];`
+
+### Screenshot
+![alt tag](http://github.com/tdubik/VESpinner/screenshot.png)
