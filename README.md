@@ -21,4 +21,4 @@ Spinner (or as apple named it UIActivityIndicator) which you can customize.
     [_spinner startAnimating];`
 
 ### Screenshot
-![alt tag](http://github.com/tdubik/VESpinner/screenshot.png)
+![alt tag](https://github.com/tdubik/VESpinner/blob/master/screenshot.png?raw=true)
