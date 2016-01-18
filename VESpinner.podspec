@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
 
   s.name         = "VESpinner"
   s.version      = "0.0.1"
-  s.summary      = ""
+  s.summary      = "Customizable Spinner for iOS"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
 
-  s.license      = "MIT (example)"
+  s.license      = "MIT"
   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
 
 
@@ -80,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/tdubik/VESpinner.git", :commit => "88fe68ba279b4b69ec0b43cdafc54804cb09713f" }
+  s.source       = { :git => "https://github.com/tdubik/VESpinner.git", :commit => "88fe68ba279b4b69ec0b43cdafc54804cb09713f", :tag => '0.0.1' }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
