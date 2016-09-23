@@ -25,12 +25,21 @@
 //
 
 #import <UIKit/UIKit.h>
+enum {
+    VESpinnerAnimationTypeRotate = 1,
+    VESpinnerAnimationTypeInsideOutside = 2
+};
+typedef NSUInteger VESpinnerAnimationType;
 
 @interface VESpinner : UIView
 /** Defines single dot size. Default value is 8.0 */
 @property (nonatomic, assign) CGFloat dotSize;
 /** Defines the number of dots to spin. Default value is 10.0 */
 @property (nonatomic, assign) CGFloat dotCount;
+/** Defines the type of dots animation. Default value is VESpinnerAnimationTypeRotate */
+@property (nonatomic, assign) VESpinnerAnimationType animationType;
+/** Defines the color of dots. Default value is empty array (dot color is set by backgroundColor property ) */
+@property (nonatomic, strong) NSArray *colorsArray;
 
 /** 
  Start animating
@@ -41,5 +50,7 @@
  Stop animating
  */
 - (void)stopAnimating;
+
+
 
 @end
