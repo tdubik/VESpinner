@@ -46,7 +46,7 @@
         [_containerLayer setPosition:self.center];
         [_containerLayer setAnchorPoint:CGPointMake(0.5, 0.5)];
         [_animation setRepeatCount:CGFLOAT_MAX];
-        [_animation setDuration:1.5];
+        [_animation setDuration:1];
         [_animation setCalculationMode:@"discrete"];
         [self setHidden:YES];
         [[self layer] addSublayer:_containerLayer];
@@ -90,9 +90,9 @@
     CGRect frame = self.frame;
     NSMutableArray *starList = [NSMutableArray new];
     NSMutableArray *animationValues = [NSMutableArray array];
-    int animationFrameMultiplier = 4.0;
+    int animationFrameMultiplier = 1.0;
     int animationFrameMultiplierIndex = 0;
-    CAShapeLayer *starShape = nil;
+    UIView *starShape = nil;
     for (CGFloat  i = 0.0; i < 360; i = i + 360 / ( animationFrameMultiplier * _dotCount))
     {
 
@@ -106,42 +106,67 @@
             starShape = nil;
         }
         animationFrameMultiplierIndex++;
-        
-        [animationValues addObject:@(iRadian)];
+        if (_animationType == VESpinnerAnimationTypeRotate) {
+            [animationValues addObject:@(iRadian)];
+        }
         if (starShape == nil){
-            starShape = [[CAShapeLayer alloc] init];
-            starShape.cornerRadius = (roundedCornes) ? starSize.width * 0.5 : 0;
+            starShape = [UIView new];
+            starShape.layer.cornerRadius = (roundedCornes) ? starSize.width * 0.5 : 0;
             CGPoint centerLocation = CGPointMake(frame.size.width * 0.5 - starSize.width * 0.5, frame.size.width * 0.5 - starSize.height  *0.5);
             starShape.frame = CGRectMake(centerLocation.x, centerLocation.y, starSize.width, starSize.height);
-            starShape.backgroundColor = [foregrdound CGColor];
+            starShape.layer.backgroundColor = [foregrdound CGColor];
+            [starShape setBackgroundColor:foregrdound];
             if(_colorsArray) {
                 int index = fmod(floor((i * _dotCount/360.0)), [_colorsArray count]);
                 UIColor *color = _colorsArray[index];
-                starShape.backgroundColor = [color CGColor];
+                starShape.layer.backgroundColor = [color CGColor];
             }
         }
         
-        starShape.anchorPoint = CGPointMake(0.5,0.0);
+        starShape.layer.anchorPoint = CGPointMake(0.5,0.0);
         
         if (_animationType == VESpinnerAnimationTypeRotate) {
             CATransform3D rotation = CATransform3DMakeTranslation(0, 0, 0.0);
             rotation = CATransform3DRotate(rotation, -iRadian, 0.0, 0.0, 1.0);
             rotation = CATransform3DTranslate(rotation, 0, distance, 0.0);
-            starShape.transform = rotation;
-            starShape.opacity = (360 - i) / 360;
+            starShape.layer.transform = rotation;
+            starShape.layer.opacity = (360 - i) / 360;
         } else if (_animationType == VESpinnerAnimationTypeInsideOutside) {
+
+            
             CATransform3D rotation = CATransform3DMakeTranslation(0, 0, 0.0);
             rotation = CATransform3DRotate(rotation, -iRadian, 0.0, 0.0, 1.0);
-            CGFloat scale = 1 + sin(iRadian) * 0.3;
+            CGFloat scale = 1.00001;
             CGFloat newDistance = scale * distance;
             rotation = CATransform3DTranslate(rotation, 0, newDistance, 0.0);
             rotation = CATransform3DScale(rotation, scale, scale, scale);
-            starShape.transform = rotation;
+            starShape.layer.transform = rotation;
         }
-        [_containerLayer addSublayer:starShape];
+        starShape.tag = i;
+        [_containerLayer addSublayer:starShape.layer];
         [starList addObject:starShape];
     }
     [_animation setValues:animationValues];
+    
+    if (_animationType == VESpinnerAnimationTypeInsideOutside) {
+        CGFloat i = 0;
+        for (UIView *star in starList) {
+            CGFloat delay = i/8.0;
+            i = i + 1;
+            [UIView animateWithDuration:.5 delay:delay options: UIViewAnimationOptionAutoreverse|UIViewAnimationOptionRepeat animations:^{
+                CGFloat iRadian = star.tag * M_PI / 180.0;
+                CATransform3D rotation = CATransform3DMakeTranslation(0, 0, 0.0);
+                rotation = CATransform3DRotate(rotation, -iRadian, 0.0, 0.0, 1.0);
+                CGFloat scale = 2;
+                CGFloat newDistance = distance + scale * 0.25;
+                rotation = CATransform3DScale(rotation, scale, scale, scale);
+                rotation = CATransform3DTranslate(rotation, 0, newDistance, 0.0);
+         
+                star.layer.transform = rotation;
+         
+            } completion:nil];
+        }
+    }
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
