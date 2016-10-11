@@ -43,6 +43,7 @@
     _spinner = [[VESpinner alloc] initWithFrame:CGRectMake(0.0, 0.0, spinnerSize,spinnerSize)];
     [self.view addSubview:_spinner];
     [_spinner setCenter:CGPointMake(self.view.center.x, 150)];
+    [_spinner setAnimationDuration:1.5];
     [_spinner setAnimationType:VESpinnerAnimationTypeInsideOutside];
     [_spinner setColorsArray:@[[UIColor colorWithRed:0.1804 green:0.1804 blue:0.1804 alpha:1.0], [UIColor colorWithRed:0.1647 green:0.6667 blue:0.7725 alpha:1.0] , [UIColor colorWithRed:0.8941 green:0.3765 blue:0.251 alpha:1.0] , [UIColor colorWithRed:0.9059 green:0.6353 blue:0.2275 alpha:1.0]]];
     [_spinner setDotCount:8];
@@ -58,6 +59,7 @@
     [_spinnerRotate setBackgroundColor:[UIColor purpleColor]];
     [_spinnerRotate setDotCount:10];
     [_spinnerRotate setDotSize:9.0];
+
     [_spinnerRotate startAnimating];
 
 }
