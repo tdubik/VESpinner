@@ -46,7 +46,6 @@
         [_containerLayer setPosition:self.center];
         [_containerLayer setAnchorPoint:CGPointMake(0.5, 0.5)];
         [_animation setRepeatCount:CGFLOAT_MAX];
-        [_animation setDuration:1];
         [_animation setCalculationMode:@"discrete"];
         [self setHidden:YES];
         [[self layer] addSublayer:_containerLayer];
@@ -85,6 +84,12 @@
     if(_animationType == 0){
         _animationType = VESpinnerAnimationTypeRotate;
     }
+    
+    if(_animationDuration == 0){
+        _animationDuration = 1.0;
+    }
+    
+    [_animation setDuration:_animationDuration];
     
     CGFloat distance = self.frame.size.width * 0.5 - starSize.width;
     CGRect frame = self.frame;
@@ -132,8 +137,6 @@
             starShape.layer.transform = rotation;
             starShape.layer.opacity = (360 - i) / 360;
         } else if (_animationType == VESpinnerAnimationTypeInsideOutside) {
-
-            
             CATransform3D rotation = CATransform3DMakeTranslation(0, 0, 0.0);
             rotation = CATransform3DRotate(rotation, -iRadian, 0.0, 0.0, 1.0);
             CGFloat scale = 1.00001;
@@ -151,9 +154,9 @@
     if (_animationType == VESpinnerAnimationTypeInsideOutside) {
         CGFloat i = 0;
         for (UIView *star in starList) {
-            CGFloat delay = i/8.0;
+            CGFloat delay = i/_dotCount * _animationDuration;
             i = i + 1;
-            [UIView animateWithDuration:.5 delay:delay options: UIViewAnimationOptionAutoreverse|UIViewAnimationOptionRepeat animations:^{
+            [UIView animateWithDuration:.5 * _animationDuration delay:delay options: UIViewAnimationOptionAutoreverse|UIViewAnimationOptionRepeat animations:^{
                 CGFloat iRadian = star.tag * M_PI / 180.0;
                 CATransform3D rotation = CATransform3DMakeTranslation(0, 0, 0.0);
                 rotation = CATransform3DRotate(rotation, -iRadian, 0.0, 0.0, 1.0);

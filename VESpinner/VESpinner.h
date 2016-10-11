@@ -40,6 +40,9 @@ typedef NSUInteger VESpinnerAnimationType;
 @property (nonatomic, assign) VESpinnerAnimationType animationType;
 /** Defines the color of dots. Default value is empty array (dot color is set by backgroundColor property ) */
 @property (nonatomic, strong) NSArray *colorsArray;
+/** Defines the duration of animation cycle (default value 1 sec)*/
+@property (nonatomic, assign) CGFloat animationDuration;
+
 
 /** 
  Start animating
