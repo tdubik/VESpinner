@@ -152,7 +152,10 @@
     [_animation setValues:animationValues];
     
     if (_animationType == VESpinnerAnimationTypeInsideOutside) {
+        
         CGFloat i = 0;
+        [_containerLayer setHidden:YES];
+        
         for (UIView *star in starList) {
             CGFloat delay = i/_dotCount * _animationDuration;
             i = i + 1;
@@ -164,12 +167,16 @@
                 CGFloat newDistance = distance + scale * 0.25;
                 rotation = CATransform3DScale(rotation, scale, scale, scale);
                 rotation = CATransform3DTranslate(rotation, 0, newDistance, 0.0);
-         
+                
                 star.layer.transform = rotation;
-         
+                
             } completion:nil];
         }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_animationDuration * 0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [_containerLayer setHidden:NO];
+        });
     }
+
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
@@ -194,4 +201,8 @@
     [self setHidden:YES];
 }
 
+- (BOOL) isAnimating
+{
+    return [[self containerLayer] animationKeys] != nil;
+}
 @end

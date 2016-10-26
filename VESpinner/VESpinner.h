@@ -54,6 +54,10 @@ typedef NSUInteger VESpinnerAnimationType;
  */
 - (void)stopAnimating;
 
+/**
+ Is Animating
+ */
+- (BOOL) isAnimating;
 
 
 @end
