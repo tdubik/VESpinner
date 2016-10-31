@@ -32,7 +32,6 @@
 @property (nonatomic, strong) NSMutableArray *starList;
 @property (nonatomic, strong) CAKeyframeAnimation *animation;
 @property (nonatomic, strong) UIColor *spinnerColor;
-@property (nonatomic, strong) UIView *backgroundView;
 
 @end
 
@@ -91,12 +90,6 @@
     }
     
     [_animation setDuration:_animationDuration];
-    
-    _backgroundView = [[UIView alloc] initWithFrame:self.window.frame];
-    
-    [_backgroundView setBackgroundColor:[UIColor clearColor]];
-    [[self window] addSubview:_backgroundView];
-    [_backgroundView setHidden:!_blockBackgroundUserInteraction];
     
     CGFloat distance = self.frame.size.width * 0.5 - starSize.width;
     CGRect frame = self.frame;
@@ -193,18 +186,11 @@
     }
 }
 
-- (void)setBlockBackgroundUserInteraction:(BOOL)block
-{
-    _blockBackgroundUserInteraction = block;
-    [_backgroundView setHidden:!_blockBackgroundUserInteraction];
-}
-
 - (void)startAnimating
 {
     if(![[_animation values] count]){
         [self prepare];
     }
-    [_backgroundView setHidden:!_blockBackgroundUserInteraction];
     [self setHidden:NO];
     [_containerLayer addAnimation:_animation forKey:@"rotation"];
 }
@@ -213,14 +199,6 @@
 {
     [_containerLayer removeAllAnimations];
     [self setHidden:YES];
-}
-
-- (void) setHidden:(BOOL)hidden
-{
-    [super setHidden:hidden];
-    if(hidden) {
-        [_backgroundView setHidden:hidden];
-    }
 }
 
 - (BOOL) isAnimating
