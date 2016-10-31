@@ -42,6 +42,9 @@ typedef NSUInteger VESpinnerAnimationType;
 @property (nonatomic, strong) NSArray *colorsArray;
 /** Defines the duration of animation cycle (default value 1 sec)*/
 @property (nonatomic, assign) CGFloat animationDuration;
+/** Defines if user can interact with views in background, (default value: NO)*/
+@property (nonatomic, assign) BOOL blockBackgroundUserInteraction;
+
 
 
 /** 
