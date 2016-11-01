@@ -25,7 +25,6 @@
 //
 
 #import "VESpinner.h"
-#import "CALayer+VEUtils.h"
 
 @interface VESpinner()
 
@@ -34,6 +33,7 @@
 @property (nonatomic, strong) CAKeyframeAnimation *animation;
 @property (nonatomic, strong) UIColor *spinnerColor;
 @property (nonatomic, strong) UIControl *overlayView;
+@property (nonatomic, strong) NSDictionary *persistedAnimations;
 
 @end
 
@@ -51,8 +51,14 @@
         [_animation setCalculationMode:@"discrete"];
         [self setHidden:YES];
         [[self layer] addSublayer:_containerLayer];
+        
+        [self registerForAppStateNotifications];
     }
     return self;
+}
+
+- (void)dealloc {
+    [self unregisterFromAppStateNotifications];
 }
 
 - (void)layoutSubviews
@@ -177,8 +183,6 @@
                 star.layer.transform = rotation;
                 
             } completion:nil];
-
-            [star.layer VE_setCurrentAnimationsPersistent];
         }
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_animationDuration * 0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self setHidden:NO];
@@ -201,7 +205,7 @@
     }
     [self setHidden:NO];
     [_containerLayer addAnimation:_animation forKey:@"rotation"];
-    [_containerLayer VE_setCurrentAnimationsPersistent];
+//    [_containerLayer VE_setCurrentAnimationsPersistent];
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         [self updateViewHierarchy];
@@ -261,17 +265,83 @@
     }
 }
 
-- (void) setHidden:(BOOL)hidden
+- (void)setHidden:(BOOL)hidden
 {
     [super setHidden:hidden];
     self.overlayView.hidden = hidden;
 }
 
-- (void) setBlockBackgroundUserInteraction:(BOOL)blockBackgroundUserInteraction
+- (void)setBlockBackgroundUserInteraction:(BOOL)blockBackgroundUserInteraction
 {
     _blockBackgroundUserInteraction = blockBackgroundUserInteraction;
     self.overlayView.userInteractionEnabled = blockBackgroundUserInteraction;
 }
 
+#pragma mark - Notifications
+
+- (void)registerForAppStateNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+- (void)unregisterFromAppStateNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)applicationDidEnterBackground {
+    [self persistLayerAnimationsAndPause];
+}
+
+- (void)applicationWillEnterForeground {
+    [self restoreLayerAnimationsAndResume];
+}
+
+
+- (void)persistLayerAnimationsAndPause {
+    CALayer *layer = _containerLayer;
+    if (!layer) {
+        return;
+    }
+    NSMutableDictionary *animations = [NSMutableDictionary new];
+    for (NSString *key in _containerLayer.animationKeys) {
+        CAAnimation *animation = [layer animationForKey:key];
+        if (animation) {
+            animations[key] = animation;
+        }
+    }
+    if (animations.count > 0) {
+        self.persistedAnimations = animations;
+        [self VE_pauseLayer];
+    }
+}
+
+- (void)restoreLayerAnimationsAndResume {
+    CALayer *layer = _containerLayer;
+    if (!layer) {
+        return;
+    }
+    [self.persistedAnimations enumerateKeysAndObjectsUsingBlock:^(NSString *key, CAAnimation *animation, BOOL *stop) {
+        [layer addAnimation:animation forKey:key];
+    }];
+    if (self.persistedAnimations.count > 0) {
+        [self VE_resumeLayer];
+    }
+    self.persistedAnimations = nil;
+}
+
+- (void)VE_pauseLayer {
+    CFTimeInterval pausedTime = [_containerLayer convertTime:CACurrentMediaTime() fromLayer:nil];
+    _containerLayer.speed = 0.0;
+    _containerLayer.timeOffset = pausedTime;
+}
+
+- (void)VE_resumeLayer {
+    CFTimeInterval pausedTime = [_containerLayer timeOffset];
+    _containerLayer.speed = 1.0;
+    _containerLayer.timeOffset = 0.0;
+    _containerLayer.beginTime = 0.0;
+    CFTimeInterval timeSincePause = [_containerLayer convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
+    _containerLayer.beginTime = timeSincePause;
+}
 
 @end

@@ -14,7 +14,6 @@
 		37CA1E841C491B93006837F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37CA1E831C491B93006837F4 /* Assets.xcassets */; };
 		37CA1E871C491B93006837F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37CA1E851C491B93006837F4 /* LaunchScreen.storyboard */; };
 		37CA1E911C491C1E006837F4 /* VESpinner.m in Sources */ = {isa = PBXBuildFile; fileRef = 37CA1E901C491C1E006837F4 /* VESpinner.m */; };
-		5672367A1DC784A7007E1600 /* CALayer+VEUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 567236781DC784A7007E1600 /* CALayer+VEUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,8 +29,6 @@
 		37CA1E881C491B93006837F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37CA1E8F1C491C1E006837F4 /* VESpinner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VESpinner.h; path = ../../VESpinner/VESpinner.h; sourceTree = "<group>"; };
 		37CA1E901C491C1E006837F4 /* VESpinner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VESpinner.m; path = ../../VESpinner/VESpinner.m; sourceTree = "<group>"; };
-		567236781DC784A7007E1600 /* CALayer+VEUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CALayer+VEUtils.m"; path = "../../VESpinner/CALayer+VEUtils.m"; sourceTree = "<group>"; };
-		567236791DC784A7007E1600 /* CALayer+VEUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CALayer+VEUtils.h"; path = "../../VESpinner/CALayer+VEUtils.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,20 +86,10 @@
 		37CA1E8E1C491C05006837F4 /* VESpinner */ = {
 			isa = PBXGroup;
 			children = (
-				567236771DC7839A007E1600 /* utils */,
 				37CA1E8F1C491C1E006837F4 /* VESpinner.h */,
 				37CA1E901C491C1E006837F4 /* VESpinner.m */,
 			);
 			name = VESpinner;
-			sourceTree = "<group>";
-		};
-		567236771DC7839A007E1600 /* utils */ = {
-			isa = PBXGroup;
-			children = (
-				567236781DC784A7007E1600 /* CALayer+VEUtils.m */,
-				567236791DC784A7007E1600 /* CALayer+VEUtils.h */,
-			);
-			name = utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,7 +165,6 @@
 				37CA1E911C491C1E006837F4 /* VESpinner.m in Sources */,
 				37CA1E7F1C491B93006837F4 /* ViewController.m in Sources */,
 				37CA1E7C1C491B93006837F4 /* AppDelegate.m in Sources */,
-				5672367A1DC784A7007E1600 /* CALayer+VEUtils.m in Sources */,
 				37CA1E791C491B93006837F4 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
