@@ -165,7 +165,7 @@
     if (_animationType == VESpinnerAnimationTypeInsideOutside) {
         
         CGFloat i = 0;
-        [self setHidden:YES];
+        [[self layer] setHidden:YES];
         
         for (UIView *star in starList) {
             CGFloat delay = i/_dotCount * _animationDuration;
@@ -185,7 +185,7 @@
             } completion:nil];
         }
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_animationDuration * 0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self setHidden:NO];
+            [[self layer] setHidden:NO];
         });
     }
 
