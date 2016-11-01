@@ -29,7 +29,7 @@
 
 @interface ViewController ()
 @property (nonatomic, strong) VESpinner *spinner;
-@property (nonatomic, strong) VESpinner *spinnerRotate;
+@property (nonatomic, strong) UIButton *backgroundButton;
 
 @end
 
@@ -41,27 +41,38 @@
     
     CGFloat spinnerSize = 70.0;
     _spinner = [[VESpinner alloc] initWithFrame:CGRectMake(0.0, 0.0, spinnerSize,spinnerSize)];
+    [_spinner setBlockBackgroundUserInteraction:YES];
     [self.view addSubview:_spinner];
-    [_spinner setCenter:CGPointMake(self.view.center.x, 150)];
+    [_spinner setCenter:CGPointMake(self.view.center.x, self.view.center.y)];
     [_spinner setAnimationDuration:1.5];
-    [_spinner setAnimationType:VESpinnerAnimationTypeInsideOutside];
-    [_spinner setColorsArray:@[[UIColor colorWithRed:0.1804 green:0.1804 blue:0.1804 alpha:1.0], [UIColor colorWithRed:0.1647 green:0.6667 blue:0.7725 alpha:1.0] , [UIColor colorWithRed:0.8941 green:0.3765 blue:0.251 alpha:1.0] , [UIColor colorWithRed:0.9059 green:0.6353 blue:0.2275 alpha:1.0]]];
-    [_spinner setDotCount:8];
-    [_spinner setDotSize:16.0];
+    [_spinner setAnimationType:VESpinnerAnimationTypeRotate];
+    [_spinner setDotCount:18];
+    [_spinner setBackgroundColor:[UIColor purpleColor]];
+    [_spinner setDotSize:9.0];
     [_spinner startAnimating];
+    [_spinner setHidden:YES];
+    [_spinner setHidden:NO];
 
+
+
+    _backgroundButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [_backgroundButton setFrame:CGRectMake(20, 20, 220, 20)];
+    [self.view addSubview:_backgroundButton];
     
-    spinnerSize = 50.0;
-    _spinnerRotate = [[VESpinner alloc] initWithFrame:CGRectMake(0.0, 0.0, spinnerSize,spinnerSize)];
-    [self.view addSubview:_spinnerRotate];
-    [_spinnerRotate setCenter:CGPointMake(self.view.center.x, 300)];
-    [_spinnerRotate setAnimationType:VESpinnerAnimationTypeRotate];
-    [_spinnerRotate setBackgroundColor:[UIColor purpleColor]];
-    [_spinnerRotate setDotCount:10];
-    [_spinnerRotate setDotSize:9.0];
+    [_backgroundButton setTitle:@"background button" forState:UIControlStateNormal];
+    [_backgroundButton addTarget:self action:@selector(backgroundButtonAction) forControlEvents:UIControlEventTouchUpInside];
 
-    [_spinnerRotate startAnimating];
+}
 
+- (void)backgroundButtonAction
+{
+    UIAlertView *theAlert = [[UIAlertView alloc] initWithTitle:@"Title"
+                                                       message:@"This is the message."
+                                                      delegate:self
+                                             cancelButtonTitle:@"OK"
+                                             otherButtonTitles:nil];
+    
+    [theAlert show];
 }
 
 - (void)didReceiveMemoryWarning {

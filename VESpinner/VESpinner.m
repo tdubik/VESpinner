@@ -25,6 +25,7 @@
 //
 
 #import "VESpinner.h"
+#import "CALayer+VEUtils.h"
 
 @interface VESpinner()
 
@@ -32,6 +33,7 @@
 @property (nonatomic, strong) NSMutableArray *starList;
 @property (nonatomic, strong) CAKeyframeAnimation *animation;
 @property (nonatomic, strong) UIColor *spinnerColor;
+@property (nonatomic, strong) UIControl *overlayView;
 
 @end
 
@@ -60,6 +62,9 @@
     if(![[_animation values] count]){
         [self prepare];
     }
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [self updateViewHierarchy];
+    }];
 }
 
 - (void)prepare
@@ -154,11 +159,12 @@
     if (_animationType == VESpinnerAnimationTypeInsideOutside) {
         
         CGFloat i = 0;
-        [_containerLayer setHidden:YES];
+        [self setHidden:YES];
         
         for (UIView *star in starList) {
             CGFloat delay = i/_dotCount * _animationDuration;
             i = i + 1;
+            [star.layer removeAllAnimations];
             [UIView animateWithDuration:.5 * _animationDuration delay:delay options: UIViewAnimationOptionAutoreverse|UIViewAnimationOptionRepeat animations:^{
                 CGFloat iRadian = star.tag * M_PI / 180.0;
                 CATransform3D rotation = CATransform3DMakeTranslation(0, 0, 0.0);
@@ -171,9 +177,11 @@
                 star.layer.transform = rotation;
                 
             } completion:nil];
+
+            [star.layer VE_setCurrentAnimationsPersistent];
         }
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_animationDuration * 0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [_containerLayer setHidden:NO];
+            [self setHidden:NO];
         });
     }
 
@@ -188,21 +196,82 @@
 
 - (void)startAnimating
 {
-    if(![[_animation values] count]){
+    if(![[_animation values] count] && ![self isAnimating]){
         [self prepare];
     }
     [self setHidden:NO];
     [_containerLayer addAnimation:_animation forKey:@"rotation"];
+    [_containerLayer VE_setCurrentAnimationsPersistent];
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [self updateViewHierarchy];
+    }];
 }
 
 - (void)stopAnimating
 {
     [_containerLayer removeAllAnimations];
+    for (UIView *dot in _starList) {
+        [dot.layer removeAllAnimations];
+    }
     [self setHidden:YES];
+    [self.overlayView removeFromSuperview];
 }
 
 - (BOOL) isAnimating
 {
     return [[self containerLayer] animationKeys] != nil;
 }
+
+- (UIControl*)overlayView {
+    if(!_overlayView) {
+        _overlayView = [[UIControl alloc] init];
+        _overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _overlayView.backgroundColor = [UIColor clearColor];
+        _overlayView.userInteractionEnabled = _blockBackgroundUserInteraction;
+    }
+    // Update frame
+    CGRect windowBounds = [[[UIApplication sharedApplication] delegate] window].bounds;
+    _overlayView.frame = windowBounds;
+    
+    return _overlayView;
+}
+
+
+- (void)updateViewHierarchy {
+    if(!self.overlayView.superview) {
+        NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
+        for (UIWindow *window in frontToBackWindows) {
+            BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
+            BOOL windowIsVisible = !window.hidden && window.alpha > 0;
+            BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal && window.windowLevel <= UIWindowLevelNormal);
+            
+            if(windowOnMainScreen && windowIsVisible && windowLevelSupported) {
+                [window addSubview:self.overlayView];
+                break;
+            }
+        }
+    } else {
+        [self.overlayView.superview bringSubviewToFront:self.overlayView];
+    }
+    
+    
+    if(!self.superview){
+        [self.overlayView addSubview:self];
+    }
+}
+
+- (void) setHidden:(BOOL)hidden
+{
+    [super setHidden:hidden];
+    self.overlayView.hidden = hidden;
+}
+
+- (void) setBlockBackgroundUserInteraction:(BOOL)blockBackgroundUserInteraction
+{
+    _blockBackgroundUserInteraction = blockBackgroundUserInteraction;
+    self.overlayView.userInteractionEnabled = blockBackgroundUserInteraction;
+}
+
+
 @end
