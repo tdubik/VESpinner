@@ -268,6 +268,7 @@
 - (void)setHidden:(BOOL)hidden
 {
     [super setHidden:hidden];
+    [self.containerLayer setHidden:hidden];
     self.overlayView.hidden = hidden;
 }
 
