@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "VESpinner"
-  s.version      = "0.0.9"
+  s.version      = "0.0.10"
   s.summary      = "Customizable Spinner for iOS"
 
   # This description is used to generate tags and improve search results.
