@@ -27,7 +27,8 @@
 #import <UIKit/UIKit.h>
 enum {
     VESpinnerAnimationTypeRotate = 1,
-    VESpinnerAnimationTypeInsideOutside = 2
+    VESpinnerAnimationTypeInsideOutside = 2,
+    VESpinnerAnimationTypeBiggerSmaller
 };
 typedef NSUInteger VESpinnerAnimationType;
 

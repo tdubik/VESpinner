@@ -111,7 +111,7 @@
     UIView *starShape = nil;
     for (CGFloat  i = 0.0; i < 360; i = i + 360 / ( animationFrameMultiplier * _dotCount))
     {
-
+        
         CGFloat iRadian = i * M_PI / 180.0;
         if (clockwise){
             iRadian = -iRadian;
@@ -155,6 +155,9 @@
             rotation = CATransform3DTranslate(rotation, 0, newDistance, 0.0);
             rotation = CATransform3DScale(rotation, scale, scale, scale);
             starShape.layer.transform = rotation;
+        } else if(_animationType == VESpinnerAnimationTypeBiggerSmaller)
+        {
+            
         }
         starShape.tag = i;
         [_containerLayer addSublayer:starShape.layer];
@@ -188,7 +191,26 @@
             [[self layer] setHidden:NO];
         });
     }
-
+    
+    if(_animationType == VESpinnerAnimationTypeBiggerSmaller)
+    {
+        
+        for (UIView *star in starList) {
+            [star.layer removeAllAnimations];
+            star.transform = CGAffineTransformMakeScale(0, 0);
+            star.alpha = 1.0;
+            CGPoint center = star.center; // or any point you want
+            [star.layer setAnchorPoint:CGPointMake(0.5, 0.5)];
+            
+            [UIView animateWithDuration:.5 * _animationDuration delay:0.0 options: UIViewAnimationOptionAutoreverse|UIViewAnimationOptionRepeat animations:^{
+                star.transform = CGAffineTransformMakeScale(1, 1);
+                star.alpha = 0.0;
+                star.center = center;
+                
+            } completion:nil];
+        }
+    }
+    
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
@@ -205,7 +227,7 @@
     }
     [self setHidden:NO];
     [_containerLayer addAnimation:_animation forKey:@"rotation"];
-//    [_containerLayer VE_setCurrentAnimationsPersistent];
+    //    [_containerLayer VE_setCurrentAnimationsPersistent];
     
     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         [self updateViewHierarchy];
