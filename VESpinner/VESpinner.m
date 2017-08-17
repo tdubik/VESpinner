@@ -42,6 +42,10 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if(self = [super initWithFrame:frame]){
+        if(_overlayColor == nil){
+            _overlayColor = [UIColor clearColor];
+        }
+        
         _containerLayer = [[CAShapeLayer alloc] init];
         [_containerLayer setBounds:frame];
         _animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.rotation"];
@@ -231,7 +235,7 @@
     if(!_overlayView) {
         _overlayView = [[UIControl alloc] init];
         _overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _overlayView.backgroundColor = [UIColor clearColor];
+        _overlayView.backgroundColor = self.overlayColor;
         _overlayView.userInteractionEnabled = _blockBackgroundUserInteraction;
     }
     // Update frame
@@ -263,6 +267,8 @@
     if(!self.superview){
         [self.overlayView addSubview:self];
     }
+    
+    [self.superview bringSubviewToFront:self];
 }
 
 - (void)setHidden:(BOOL)hidden
@@ -344,6 +350,14 @@
     _containerLayer.beginTime = 0.0;
     CFTimeInterval timeSincePause = [_containerLayer convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
     _containerLayer.beginTime = timeSincePause;
+}
+
+
+- (void)setOverlayColor:(UIColor *)overlayColor
+{
+    _overlayColor = overlayColor;
+    [_overlayView setBackgroundColor:_overlayColor];
+    
 }
 
 @end

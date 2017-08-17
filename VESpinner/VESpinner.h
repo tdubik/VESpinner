@@ -44,6 +44,9 @@ typedef NSUInteger VESpinnerAnimationType;
 @property (nonatomic, assign) CGFloat animationDuration;
 /** Defines if user can interact with views in background, (default value: NO)*/
 @property (nonatomic, assign) BOOL blockBackgroundUserInteraction;
+/** Defines overlay color, (default value:clearColor)*/
+@property (nonatomic, strong) UIColor *overlayColor;
+
 
 
 
